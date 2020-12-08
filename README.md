@@ -2,6 +2,8 @@
 
 [//]: # (Image References)
 
+
+[image0]: ./data/43mph.png "running_at_43mph"
 [image1]: ./data/speed1.png "auto-tunning at speed1"
 [image2]: ./data/speed2.png "auto-tunning at speed2"
 [image3]: ./data/speed1_curv.png "auto-tunning on curv at speed1"
@@ -9,7 +11,7 @@
 
 ---
 
-[![alt text][video1]](https://youtu.be/AJfq0BIkAko)
+![alt text][image0]
 
 ---
 
@@ -22,7 +24,10 @@ sudo chmod u+x {simulator_file_name}
 ```
 
 ### Goals
-In this project the goal is to safely navigate around a virtual highway with other traffic that is driving +-10 MPH of the 50 MPH speed limit. You will be provided the car's localization and sensor fusion data, there is also a sparse map list of waypoints around the highway. The car should try to go as close as possible to the 50 MPH speed limit, which means passing slower traffic when possible, note that other cars will try to change lanes too. The car should avoid hitting other cars at all cost as well as driving inside of the marked road lanes at all times, unless going from one lane to another. The car should be able to make one complete loop around the 6946m highway. Since the car is trying to go 50 MPH, it should take a little over 5 minutes to complete 1 loop. Also the car should not experience total acceleration over 10 m/s^2 and jerk that is greater than 10 m/s^3.
+
+In this project the goal was to implement a PID controller in C++ to maneuver the vehicle around the track using the simulator! The simulator provided with the cross track error (CTE) and the velocity (mph) in order to compute the appropriate steering angle. The car would try to go as close as possible to the 50 MPH speed limit. Here, the PID gains were selected such that the car is close to the desired speed(50mph) and have the least errors on the curvy trajectories.
+
+Auto-tunning is the major tool to achieve the goal. The coordinate ascent optimization was utilized to fit the PID parameters automatically. 
 
 
 ## Basic Build Instructions
@@ -66,14 +71,14 @@ Controller algorithms can vary from simple to complex. Some simple algorithms wi
 |increase i gain     | Decrease     | Increase  | Increase      | Eliminate          |
 |inccreas d gain     | small change | Decrease  | Decrease.     | Small change       |
 
-[check out what is rise time, overshoot, settling time, steady state error](https://ni.scene7.com/is/image/ni/12fbdcae1636?scl=1)
+[check out rise time/overshoot/settling time/steady state error](https://ni.scene7.com/is/image/ni/12fbdcae1636?scl=1)
 
 
 2. **Automatic PID tunning**
 
 PID parameter tunning depends on the characteristics of system. And it is known that there's no 'one-size-fit-all' tunning method. For the project, i decided to go for a model-based auto-tunning using our python script of kinematic bicycle model. I modified it to write the auto-tunning script. [click here for the script](./PID_auto-tunning.ipynb). In conclusion, the P,D,I gain found for steering is [0.15910442248556678, 1.587110426670305, 0.005533208544239475].
 
-    - **Coordinate Ascent**
+- **Coordinate Ascent**
 
 Coordinate ascent is an optimization technique where each dimension is maximized(exact or inexactly), with other dimensions fixed. The local search method can be used with or without gradients but its performance heavily depends on initialization. 
 So, i first decided a promising initial values of p-gain with trials and then optimized it using CA with d-,i-gain fixed 0. Once the p-gain was optimized, i fixed the p-gain and run CA again to optimize d-gain with i-gain fixed 0. And once d-gain was optimized, i fixed the d-gain and run CA again to optimize i-gain. After each gain was optimized, i ran CA again altogether with the 3 fixed values. For each gain, i set the CA tolerance value to be sufficiently small enough(.002) to make sure that it converges enough to a local minima.
@@ -81,13 +86,15 @@ So, i first decided a promising initial values of p-gain with trials and then op
 Note that there were 2 different optimizations. One with P,I,D saught at speed = 1 and the other at speed = 2. Depending on the speed fed into our kinematic model, a PID set was different. Both PID sets passed the test at 50mph.
 
 ![alt text][image1]
+
 Speed 1 params=[0.3083945237000776, 3.73066396507075, 0.009287418277686622]
 
 ![alt text][image2]
+
 Speed 2 params=[0.15910442248556678, 1.587110426670305, 0.005533208544239475]
 
 
-    - **P,I,D at Speed = 2**
+- **P,I,D at Speed = 2**
     
 I chose the PID set saught at speed = 2 for the simulation. The reason was partly because the delta time that the websocket messages arrive in our C++ program was greater than 20msec(our simulator cycle). Remember from the previous path-planning project that our simulator cycle was 0.02 sec, and we were tossed back from the simulator around 50~70% left-over moves(out of 50) that were not eaten by our simulator. Term 2 simulator would not take that long but it differ depend on system performance. Just to be safe, i assumed 80msec. And this means i could enforce my desired speed in around 80msec interval, 12 moves per second. And since our desired speed was around 50mph(25m/sec, 0.5m per move), the speed here was set 2m per move to achieve it in 12 moves.
 

@@ -76,11 +76,8 @@ int main() {
           //Steering value is  [-1, 1].
           steer_value = pid.GetSteer();
             
-
-
           //Throttle value is  [0, 1].
-          throttle_value = 0.05*(30-speed) - 0.5*fabs(steer_value) + 0.1;
-
+          throttle_value = 0.05*(50-speed) - 0.5*fabs(steer_value) + 0.1;
             
           if(steer_value > 1){
             steer_value = 1;
@@ -88,7 +85,7 @@ int main() {
           else if(steer_value < -1){
             steer_value = -1;
           }
-            
+
           if(throttle_value > 1){
             throttle_value = 1;
           }
