@@ -86,7 +86,7 @@ Coordinate ascent is an optimization technique where each dimension(coordinate) 
 
 So, i first decided a promising initial value of p-gain and then optimized based on it using CA with d-,i-gain fixed 0. Once the p-gain was optimized, i fixed the p-gain and run CA again to optimize d-gain with i-gain fixed 0. And once d-gain was optimized, i fixed the d-gain and run CA again to optimize i-gain. After each gain was optimized, i ran CA again altogether based on the 3 fixed values. For each gain, i set the CA tolerance value to be sufficiently small enough(.002) to make sure that it converges enough to a local minima.
 
-Note that there were 2 different optimizations. One with P,I,D saught at speed = 1 and the other at speed = 2. Depending on the speed fed into our kinematic model, a PID set was different. Both PID sets passed the test at 50mph.
+Note that there were 2 different optimizations. One with P,I,D saught at speed = 1 and the other at speed = 2. Depending on the speed fed into our kinematic model, a PID set was different but each PID sets passed the simulation test at 50mph in a different driving pattern.
 
 Below is the system responses of P, I, D, PID auto-tunning at Speed=1 with params=[0.3083945237000776, 3.73066396507075, 0.009287418277686622]
 
