@@ -30,6 +30,15 @@ class PID {
    * @output The total PID error
    */
   double TotalError();
+    
+  /**
+   * Calculate steer using PID.
+   * @output steering actuation signal
+   */
+  double GetSteer();
+    
+  double prev_error;
+  double prev_terror;
 
  private:
   /**
@@ -38,13 +47,14 @@ class PID {
   double p_error;
   double i_error;
   double d_error;
-
+    
   /**
    * PID Coefficients
    */ 
   double Kp;
   double Ki;
   double Kd;
+
 };
 
 #endif  // PID_H
