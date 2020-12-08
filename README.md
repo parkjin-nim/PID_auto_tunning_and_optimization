@@ -75,6 +75,7 @@ Controller algorithms can vary from simple to complex. Some simple algorithms wi
 [check out rise time/overshoot/settling time/steady state error](https://ni.scene7.com/is/image/ni/12fbdcae1636?scl=1)
 
 
+
 2. **Automatic PID tunning**
 
 PID parameter tunning depends on the characteristics of system. And it is known that there's no 'one-size-fit-all' tunning method. For the project, i decided to go for a model-based auto-tunning using our python script of kinematic bicycle model. I modified it to write the auto-tunning script. [Check out above pid_auto-tunning.ipynb file](./PID_auto-tunning.ipynb). 
@@ -87,13 +88,14 @@ So, i first decided a promising initial value of p-gain and then optimized based
 
 Note that there were 2 different optimizations. One with P,I,D saught at speed = 1 and the other at speed = 2. Depending on the speed fed into our kinematic model, a PID set was different. Both PID sets passed the test at 50mph.
 
+Below is the system responses of P, I, D, PID auto-tunning at Speed=1 with params=[0.3083945237000776, 3.73066396507075, 0.009287418277686622]
+
 ![alt text][image1]
 
-Speed 1 params=[0.3083945237000776, 3.73066396507075, 0.009287418277686622]
+Below is the system responses of P, I, D, PID auto-tunning at Speed=2 params=[0.15910442248556678, 1.587110426670305, 0.005533208544239475]
+
 
 ![alt text][image2]
-
-Speed 2 params=[0.15910442248556678, 1.587110426670305, 0.005533208544239475]
 
 
 - **P,I,D at Speed = 2**
@@ -102,12 +104,14 @@ I chose the PID set saught at speed = 2 for the simulation. The reason was partl
 
 The other reason was it showed less errors on a curvy trajectory, especially at around 50mph, as shown below. Although it showed more error on a line trajectory, tt showed the Final Error(0.00198) over the speed = 1 case(0.01354). The figures below shows the comparison.
 
+Below is the system responses of P, I, D, PID auto-tunning at Speed=1 on a curve with params=[0.20877822643745259, 3.0511517488783064, 0.005540710267815578]
 ![alt text][image3]
-Speed 1 on curve params=[0.20877822643745259, 3.0511517488783064, 0.005540710267815578]
 
+
+Below is the system responses of P, I, D, PID auto-tunning at Speed=2 on a curve with paramms=[0.15910442248556678, 1.587110426670305, 0.005533208544239475]
 
 ![alt text][image4]
-Speed 2 on curve paramms=[0.15910442248556678, 1.587110426670305, 0.005533208544239475]
+
 
 3. **Longitudinal Speed Controller with PID**
 
