@@ -25,9 +25,9 @@ sudo chmod u+x {simulator_file_name}
 
 ### Goals
 
-In this project the goal was to implement a PID controller in C++ to maneuver the vehicle around the track using the simulator! The simulator provided with the cross track error (CTE) and the velocity (mph) in order to compute the appropriate steering angle. The car would try to go as close as possible to the 50 MPH speed limit. Here, the PID gains were selected such that the car is close to the desired speed(50mph) and have the least errors on the curvy trajectories.
+In this project the goal was to implement a PID controller in C++ to maneuver the vehicle around the track in the simulator. The simulator provided the cross track error (CTE) and the velocity (mph) in order to compute the appropriate steering angle. The car would try to go as close as possible to the 50 MPH speed limit. Here, the PID gains were selected such that the car was close to the desired speed(50mph) and had the least errors on the curvy trajectories.
 
-Auto-tunning is the major tool to achieve the goal. The coordinate ascent optimization was utilized to fit the PID parameters automatically. 
+Auto-tunning was the major tool to achieve the goal. The coordinate ascent optimization was utilized to fit the PID parameters automatically. 
 
 
 ## Basic Build Instructions
@@ -63,7 +63,8 @@ Here is the data provided from the C++ Program to the Simulator.
 ## Details
 
 1. P,I,D controller
-Controller algorithms can vary from simple to complex. Some simple algorithms widely used in industry includes Lead-lag controller, PID controller, etc., [click here for PID controller](https://en.wikipedia.org/wiki/PID_controller). The simple controller has a linear equation to output an actuation signal that is in proportion to the amount of error(p-gain), derivatives of error(d-gain), and total error(i-gain). Characteristics of P,I,D are shown as below.
+
+Controller algorithms can vary from simple to complex. Some simple algorithms widely used in industry include Lead-lag controller, [PID controller](https://en.wikipedia.org/wiki/PID_controller). The simple controller has a linear equation to output actuation signals that are in proportion to the amount of error, derivative of error, and total error. Characteristics of P,I,D are shown as below.
 
 |closed loop response| rise time    | overshoot | settling time | steady state error |
 |--------------------|--------------|-----------|---------------|--------------------|
@@ -76,12 +77,13 @@ Controller algorithms can vary from simple to complex. Some simple algorithms wi
 
 2. **Automatic PID tunning**
 
-PID parameter tunning depends on the characteristics of system. And it is known that there's no 'one-size-fit-all' tunning method. For the project, i decided to go for a model-based auto-tunning using our python script of kinematic bicycle model. I modified it to write the auto-tunning script. [click here for the script](./PID_auto-tunning.ipynb). In conclusion, the P,D,I gain found for steering is [0.15910442248556678, 1.587110426670305, 0.005533208544239475].
+PID parameter tunning depends on the characteristics of system. And it is known that there's no 'one-size-fit-all' tunning method. For the project, i decided to go for a model-based auto-tunning using our python script of kinematic bicycle model. I modified it to write the auto-tunning script. [Check out above pid_auto-tunning.ipynb file](./PID_auto-tunning.ipynb). 
 
 - **Coordinate Ascent**
 
-Coordinate ascent is an optimization technique where each dimension is maximized(exact or inexactly), with other dimensions fixed. The local search method can be used with or without gradients but its performance heavily depends on initialization. 
-So, i first decided a promising initial values of p-gain with trials and then optimized it using CA with d-,i-gain fixed 0. Once the p-gain was optimized, i fixed the p-gain and run CA again to optimize d-gain with i-gain fixed 0. And once d-gain was optimized, i fixed the d-gain and run CA again to optimize i-gain. After each gain was optimized, i ran CA again altogether with the 3 fixed values. For each gain, i set the CA tolerance value to be sufficiently small enough(.002) to make sure that it converges enough to a local minima.
+Coordinate ascent is an optimization technique where each dimension(coordinate) is maximized(exact or inexactly), with other dimensions fixed. The local search method can be used with or without gradients but its performance heavily depends on an initialization. 
+
+So, i first decided a promising initial value of p-gain and then optimized based on it using CA with d-,i-gain fixed 0. Once the p-gain was optimized, i fixed the p-gain and run CA again to optimize d-gain with i-gain fixed 0. And once d-gain was optimized, i fixed the d-gain and run CA again to optimize i-gain. After each gain was optimized, i ran CA again altogether based on the 3 fixed values. For each gain, i set the CA tolerance value to be sufficiently small enough(.002) to make sure that it converges enough to a local minima.
 
 Note that there were 2 different optimizations. One with P,I,D saught at speed = 1 and the other at speed = 2. Depending on the speed fed into our kinematic model, a PID set was different. Both PID sets passed the test at 50mph.
 
@@ -96,9 +98,9 @@ Speed 2 params=[0.15910442248556678, 1.587110426670305, 0.005533208544239475]
 
 - **P,I,D at Speed = 2**
     
-I chose the PID set saught at speed = 2 for the simulation. The reason was partly because the delta time that the websocket messages arrive in our C++ program was greater than 20msec(our simulator cycle). Remember from the previous path-planning project that our simulator cycle was 0.02 sec, and we were tossed back from the simulator around 50~70% left-over moves(out of 50) that were not eaten by our simulator. Term 2 simulator would not take that long but it differ depend on system performance. Just to be safe, i assumed 80msec. And this means i could enforce my desired speed in around 80msec interval, 12 moves per second. And since our desired speed was around 50mph(25m/sec, 0.5m per move), the speed here was set 2m per move to achieve it in 12 moves.
+I chose the PID set saught at speed = 2 for the simulation. The reason was partly because the delta time that the websocket messages arrived in our C++ program was higher than 20msec(our simulator cycle). Remember from the previous path-planning project that our simulator cycle was 0.02 sec, and we were tossed back from the simulator around 50~70% left-over moves(out of 50) that were not eaten by our simulator. Term 2 simulator would not take that long but it should differ depending on a system. Just to be safe, i assumed 80msec. And this meant i could enforce my desired speed on 12 moves per second. And since our desired speed was around 50mph(25m/sec, 0.5m per move), the speed here was set 2m per move to achieve it in 12 moves.
 
-The other reason was it showed less error on a curve, especially around 50mph, as shown below(although it showed more error on a line trajectory). It showed the Final Error(0.00198) over the speed = 1 case(0.01354). The figures below shows the comparison.
+The other reason was it showed less errors on a curvy trajectory, especially at around 50mph, as shown below. Although it showed more error on a line trajectory, tt showed the Final Error(0.00198) over the speed = 1 case(0.01354). The figures below shows the comparison.
 
 ![alt text][image3]
 Speed 1 on curve params=[0.20877822643745259, 3.0511517488783064, 0.005540710267815578]
@@ -109,7 +111,7 @@ Speed 2 on curve paramms=[0.15910442248556678, 1.587110426670305, 0.005533208544
 
 3. **Longitudinal Speed Controller with PID**
 
-For the longitudinal speed control, i set P,D,I gain manually. They were set to [0.05, 0.5, 0.] with bias 0.1. As the speed is a feedback from the dynamic system of car, the speed error to the desired speed setpoint(here, 50mph) is input to the longitudinal PID speed controller. Note that i set throttle value proportional to the magnitude of derivative of steering. The intention behind such setting was that the sharper it steered, the harder it stepped on the break.
+For the longitudinal speed control, i set P,D,I gain manually. They were set to [0.05, 0.5, 0.] with bias 0.1. As the speed is a feedback from the dynamic system of car, the speed error to the desired speed setpoint(here, 50mph) is input to the longitudinal PID speed controller. Note that i set throttle value proportional to the magnitude of derivative of steering. So, the sharper it steered, the harder it stepped on the break.
 
 ```
 throttle_value = 0.05*(50-speed) - 0.5*fabs(steer_value) + 0.1;
