@@ -112,7 +112,7 @@ init_i = params[2]
 ```
 
 
-So, i initially set parameters all zeros and optimized one by one. First p-gain was optimized and fixed, then d-gain was optimized with i-gain set to 0. Then d-gain was fixed and i-gain was optimized. In the process, i found the tolerance value of coordinate descent because it has an impact on the settling time. 
+So, i initially set parameters all zeros and optimized one by one. First p-gain was optimized and fixed, then d-gain was optimized with i-gain set to 0. Then d-gain was fixed and i-gain was optimized. In the process, i modified the tolerance value of coordinate descent because it has an impact on the settling time. 
 
 ![alt text][image2]
 
