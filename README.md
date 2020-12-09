@@ -25,7 +25,7 @@ sudo chmod u+x {simulator_file_name}
 
 ### Goals
 
-In this project the goal was to implement a PID controller in C++ to maneuver the vehicle around the track in the simulator. The simulator provided the cross track error (CTE) and the velocity (mph) in order to compute the appropriate steering angle. The car would try to go as close as possible to the 50 MPH speed limit. Here, the PID gains were selected such that the car was close to the desired speed(50mph) and had the least errors on the curvy trajectories.
+In this project the goal was to implement a PID controller in C++ to maneuver the vehicle around the track in the simulator. The simulator provided the cross track error (CTE) and the velocity (mph) in order to compute the appropriate steering angle. The car would try to go as close as possible to the 50 MPH speed limit. Here, the PID gains were optimized or selected such that the car had a minimized CTE and it's speed was close to the desired speed(50mph).
 
 Auto-tunning was the major tool to achieve the goal. The coordinate ascent optimization was utilized to fit the PID parameters automatically. 
 
