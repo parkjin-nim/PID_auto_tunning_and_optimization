@@ -80,7 +80,7 @@ Here's the concept of rise time, overshoot, settling time, and steady state erro
 
 2. **Automatic PID tunning**
 
-PID parameter tunning depends on the characteristics of system. And it is known that there's no 'one-size-fit-all' tunning method. For the project, i decided to go for a model-based auto-tunning using our python script of kinematic bicycle model. I modified it to write the auto-tunning script. [Check out above pid_auto-tunning.ipynb file](./PID_auto-tunning.ipynb). 
+PID parameter tunning depends on the characteristics of system. And it is known that there's no 'one-size-fit-all' tunning method. For the project, i decided to go for a model-based auto-tunning using our python script of kinematic bicycle model. I modified it to write [my auto-tunning script](./PID_auto-tunning.ipynb). 
 
 Coordinate ascent is an optimization technique where each dimension(coordinate) is maximized(exact or inexactly), with other dimensions fixed. 
 
