@@ -32,21 +32,12 @@ class PID {
   double TotalError();
     
   /**
-   * Calculate steer using PID.
-   * @output steering actuation signal
-   */
-  double GetSteer();
-    
-  double prev_error;
-  double prev_terror;
-
- private:
-  /**
    * PID Errors
    */
   double p_error;
   double i_error;
   double d_error;
+  double tot_error;
     
   /**
    * PID Coefficients

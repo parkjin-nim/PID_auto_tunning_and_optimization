@@ -41,9 +41,9 @@ int main() {
   PID pid;
     bool init = true;
 
-    //pid.Init(0.3083945237000776, 3.73066396507075, 0.009287418277686622);
-    pid.Init(0.15910442248556678, 1.587110426670305, 0.005533208544239475);
-
+    //pid.Init(0.2864386636430725, 3.0843418153144158, 0.01033423736942282);
+    pid.Init(0.3063393801031459, 3.757411395133915, 0.00895626708915423);
+    
     h.onMessage([&pid, &init](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -62,22 +62,12 @@ int main() {
           double cte = std::stod(j[1]["cte"].get<string>());
           double speed = std::stod(j[1]["speed"].get<string>());
           double angle = std::stod(j[1]["steering_angle"].get<string>());
-          double steer_value = .0;
+          double steer_value = 0.;
           double throttle_value = 0.;
           
-          if(init){
-            pid.prev_error = cte;
-            pid.prev_terror = pid.TotalError();
-            init = false;
-          }
-            
-          pid.UpdateError(cte);
-            
           //Steering value is  [-1, 1].
-          steer_value = pid.GetSteer();
-            
-          //Throttle value is  [0, 1].
-          throttle_value = 0.05*(50-speed) - 0.5*fabs(steer_value) + 0.1;
+          pid.UpdateError(cte);
+          steer_value = pid.TotalError();
             
           if(steer_value > 1){
             steer_value = 1;
@@ -86,16 +76,12 @@ int main() {
             steer_value = -1;
           }
 
-          if(throttle_value > 1){
-            throttle_value = 1;
-          }
-          else if(throttle_value < 0){
-            throttle_value = 0;
-          }
+
+          throttle_value = 0.01*fabs(50-speed) - 0.5*(fabs(steer_value)) + 0.1; //0.01*fabs(pid.tot_error);
+
             
           // DEBUG
-          std::cout << " CTE: " << cte << " Steering Value: " << steer_value <<" Thrtl: "<< throttle_value<<" terr:" <<pid.prev_terror - pid.TotalError() << std::endl;
-
+          std::cout << " CTE: " << cte << " Steering Value: " << steer_value <<" Speed: "<< speed << std::endl;
             
             
           json msgJson;
