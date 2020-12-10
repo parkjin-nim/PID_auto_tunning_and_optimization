@@ -13,6 +13,8 @@
 
 ![alt text][image0]
 
+[video](https://www.youtube.com/watch?v=AJfq0BIkAko)
+
 ---
 
 ### Simulator.
@@ -139,6 +141,11 @@ For the longitudinal speed control with PID, i used the speed feedback to calcul
 ```
 throttle_value = 0.01*fabs(50-speed) - 0.5*(fabs(steer_value)) + 0.1;
 ```
+
+4. **Running simulation**
+
+Remember that our behavior planning simulator tossed back almost 50~80% of our 50-move-long path. Those were left-overs not eaten by the simulator. Even though our simulator cycle is 20msec(0.02), the system call to the websocket of our C++ program would be different depending on a system or its load, and it should be bigger than 20msec. In general, it would be safe to assume 3~4 times big(60~80msec). If it was the case, the 1m speed setting for our kinematic model in my auto-tunning script would give PID parameters for 28~37 mph. The PID parameter was tunned for 1024x768(Fantastic) graphic setting of Term 2 simulator. But the video file under ./data was captured under downsampled 800x600(good) graphic setting. 
+
 ---
 
 ## Dependencies
